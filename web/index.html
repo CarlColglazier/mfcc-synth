@@ -1,0 +1,31 @@
+<html>
+	<head></head>
+	<body>Hello</body>
+	<script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script>
+	<script>
+	const audioContext = new AudioContext();
+	var mediaStreamSource = null;
+	var analyzer = null;
+	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		console.log("working");
+		navigator.mediaDevices.getUserMedia({audio: true}).then((stream) => {
+			mediaStreamSource = audioContext.createMediaStreamSource(stream)
+			//mediaStreamSource
+			analyzer = Meyda.createMeydaAnalyzer({
+				"audioContext": audioContext,
+				"source": mediaStreamSource,
+				"bufferSize": 512,
+				"featureExtractors": ["mfcc"],
+				"callback": function(features) {
+					//console.log(features);
+				}
+			});
+			console.log("Starting");
+			console.log(mediaStreamSource);
+			audioContext.resume();
+			analyzer.start();
+			console.log("And here we go.");
+		})
+	}
+	</script>
+</html>
